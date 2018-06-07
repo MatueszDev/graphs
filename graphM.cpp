@@ -49,51 +49,58 @@ void GraphM::printNetwork(int version) const
 
 void GraphM::nextGeneration()
 {
-  size_t rows = net.size();
-  //size_t columns = net[0].size();
+    size_t rows = net.size();
+    //size_t columns = net[0].size();
 
-  ++generation;
-  unsigned nodes = calcualteNumberOfNodes(generation);
+    ++generation;
+    unsigned nodes = calcualteNumberOfNodes(generation);
 
-  net.resize(nodes);
+    net.resize(nodes);
 
-  for(std::vector<unsigned>& row:net)
-  {
-      row.resize(nodes);
-  }
+    for(std::vector<unsigned>& row:net)
+    {
+        row.resize(nodes);
+    }
 
-  unsigned shift = rows;
+    unsigned shift = rows;
 
 
-  for(size_t i = 0; i < rows; i++)
-  {
-      for(size_t j = 0; j < i; j++)
-      {
-          if(net[i][j])
-          {
-              for(short copy = 0; copy < u; copy++)
-              {
-                  net[shift][i] = 1;
+    for(size_t i = 0; i < rows; i++)
+    {
+        for(size_t j = 0; j < i; j++)
+        {
+            if(net[i][j])
+            {
 
-                  for(short node = 0; node < v - 2; node++)
-                  {
+                net[shift][i] = 1;
+
+                for(short node = 0; node < v - 2; node++)
+                {
+                    net[shift + 1][shift] = 1;
+                    ++shift;
+                }
+
+                net[shift][j] = 1;
+                ++shift;
+
+                if(u > 1)
+                {
+                    net[i][j] = 0;
+                    net[shift][i] = 1;
+
+                    for(short node = 0; node < u - 2; node++)
+                    {
                         net[shift + 1][shift] = 1;
                         ++shift;
-                  }
+                    }
+                    net[shift][j] = 1;
+                    ++shift;
+                }
+            }
+        }
 
-                  net[shift][j] = 1;
-                  ++shift;
-              }
-              if(!(u%2))
-              {
-                  net[i][j] = 0; // remove connection if u is even
-              }
-          }
-      }
-  }
-
+    }
 }
-
 
 void GraphM::makeSymmetry()
 {

@@ -20,7 +20,7 @@ public:
     void printNetwork(int version) const;
     void makeSymmetry();
     unsigned sumRow(unsigned row) const;
-    
+
 
     void nextGeneration() override;
     unsigned sumAllEdges() const override;

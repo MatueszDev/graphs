@@ -24,26 +24,18 @@ void GraphL::nextGeneration()
         {
                 if(*neighbour > i && *neighbour < rows)
                 {
-                    for(short copy = 0; copy < u; copy++)
-                    {
-                        net[shift].push_back(i);
-                        net[i].push_back(shift);
-                        for(short node = 0; node < v - 2; node++)
-                        {
-                              net[shift].push_back(shift + 1);
-                              net[shift + 1].push_back(shift);
-                              ++shift;
-                        }
-                        net[*neighbour].push_back(shift);
-                        net[shift].push_back(*neighbour);
-                        shift++;
-                    }
 
-                    if(!(u%2))
+                    createChain(v,shift,i,*neighbour);
+
+
+                    if(u>1)
                     {
                         net[*neighbour].remove(i);
                         net[i].remove(*neighbour);
                         neighbour--;
+
+                        createChain(u,shift,i,*neighbour);
+
                     }
                 }
         }
@@ -138,4 +130,19 @@ void GraphL::createHistogramFile() const
     file.close();
 
     delete [] counterTable;
+}
+
+void GraphL::createChain(short length, unsigned& freeSpace, unsigned first, unsigned last)
+{
+    net[freeSpace].push_back(first);
+    net[first].push_back(freeSpace);
+    for(short node = 0; node < length - 2; node++)
+    {
+        net[freeSpace].push_back(freeSpace + 1);
+        net[freeSpace + 1].push_back(freeSpace);
+        ++freeSpace;
+    }
+    net[last].push_back(freeSpace);
+    net[freeSpace].push_back(last);
+    freeSpace++;
 }

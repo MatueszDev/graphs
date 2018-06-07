@@ -33,10 +33,11 @@ int main()
     std::cout << "\ngraphM22 \n";
 
     GraphM graphM22(2,2);
-    graphM22.nextGeneration();
-    graphM22.nextGeneration(); //error because of not deleted edges
+    for(int i =0; i < 5;i++)
+        graphM22.nextGeneration();
+
     graphM22.makeSymmetry();
-    graphM22.printNetwork(2);
+    //graphM22.printNetwork(2);
     graphM22.createHistogramFile();
     std::cout << "Fractal dimension "<< graphM22.fractalDimension() << std::endl;
 

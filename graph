@@ -1,0 +1,31 @@
+#ifndef GRAPH_H_
+#define GRAPH_H_
+
+#include<iostream>
+#include<cmath>
+
+class Graph
+{
+    protected:
+        unsigned generation = 0;
+        short u;
+        short v;
+    public:
+        Graph(short u, short v):u{u}, v{v}{if(u > v) throw -1;}
+
+        unsigned calcualteNumberOfNodes(unsigned gener)  const;
+        unsigned calcualteNumberOfEdges(unsigned gener) const;
+        unsigned getGeneration() const{ return generation;}
+        double fractalDimension() const;
+        double calculateTeoreticalExponent() const;
+
+        virtual unsigned sumAllEdges() const =0;
+        virtual void createHistogramFile() const =0;
+        virtual void nextGeneration() =0;
+
+};
+
+
+
+
+#endif

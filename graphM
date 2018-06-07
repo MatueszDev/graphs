@@ -1,0 +1,33 @@
+#ifndef GRAPHM_H_
+#define GRAPHM_H_
+
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <climits>
+#include "graph"
+
+class GraphM: public Graph
+{
+    std::vector<std::vector<unsigned>> net;
+
+public:
+    GraphM(short u, short v);
+    void printNetwork(int version) const;
+    void nextGeneration() override;
+    void makeSymmetry();
+    unsigned sumAllEdges() const override;
+    void createHistogramFile() const override;
+
+};
+
+
+
+
+
+
+
+#endif

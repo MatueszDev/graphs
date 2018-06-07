@@ -1,0 +1,32 @@
+#ifndef GRAPHMT_H_
+#define GRAPHMT_H_
+
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include "graph"
+
+
+
+class GraphMT: public Graph
+{
+    std::vector<std::vector<unsigned>> net;
+
+public:
+    GraphMT(short u, short v);
+    void printNetwork(int version) const;
+    void makeSymmetry();
+    unsigned sumRow(unsigned row) const;
+    
+
+    void nextGeneration() override;
+    unsigned sumAllEdges() const override;
+    void  createHistogramFile() const override;
+
+};
+
+
+#endif

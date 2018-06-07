@@ -46,7 +46,7 @@ int main()
     std::cout << "\ngraphL22 \n";
 
     GraphL graphL22(2,2);
-    for(int i =0; i <  10;i++)
+    for(int i = 0; i <  10;i++)
         graphL22.nextGeneration();
     //graphL22.nextGeneration();
     //graphL22.printNetwork();

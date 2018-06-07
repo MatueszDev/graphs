@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 
-files = ["datFiles/graphM22g5.dat"]
+files = ["datFiles/graphM22g5.dat","datFiles/graphL22g10.dat"]
 
 for file in files:
     with open(file) as data:

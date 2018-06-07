@@ -30,11 +30,13 @@ void GraphL::nextGeneration()
 
                     if(u>1)
                     {
+                        createChain(u,shift,i,*neighbour);
+
                         net[*neighbour].remove(i);
                         net[i].remove(*neighbour);
                         neighbour--;
 
-                        createChain(u,shift,i,*neighbour);
+
 
                     }
                 }

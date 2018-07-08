@@ -25,6 +25,7 @@ public:
     void nextGeneration() override;
     unsigned sumAllEdges() const override;
     void  createHistogramFile() const override;
+    unsigned calcualteNumberOfNodes(unsigned gener)  const override;
 
 };
 

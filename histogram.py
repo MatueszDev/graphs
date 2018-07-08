@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-
+plt.clf()
 files = ["datFiles/graphM22g5.dat","datFiles/graphL22g10.dat"]
 
 for file in files:
@@ -20,12 +20,14 @@ for file in files:
         #teoAmount = [C*i**(-exponent) for i in degrees]
         u = int(file[15])
         v = int(file[16])
-        teoAmount = [(u+v-2)*(u+v)**(generation-i) if i < generation else u+v for i in range(1,generation+1,1)]
+        #teoAmount = [(u+v-2)*(u+v)**(generation-i) if i < generation else u+v for i in range(1,generation+1,1)]
         plt.grid(which='both',linestyle='-', linewidth=0.5, alpha = 0.5)
         plt.title(file[9:-4])
         plt.xlabel("Number of neighbours")
         plt.ylabel("occurance")
-        plt.bar(degree, amount)
-        plt.plot(degrees, teoAmount,'.r')
+        #plt.bar(degree, amount)
+        print(degree, amount)
+        plt.loglog(degree, amount,'r')
         #plt.plot(degree,amount,'.r')
         plt.savefig("wyniki/{}.pdf".format(file[8:-4]))
+        plt.clf()

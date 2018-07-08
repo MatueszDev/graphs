@@ -8,13 +8,13 @@ class Graph
 {
     protected:
         unsigned generation = 0;
-        short u;
-        short v;
+        unsigned short u;
+        unsigned short v;
     public:
-        Graph(short u, short v):u{u}, v{v}{if(u > v) throw -1;}
+        Graph(unsigned short u, unsigned short v):u{u}, v{v}{if(u > v) throw -1;}
 
-        unsigned calcualteNumberOfNodes(unsigned gener)  const;
-        unsigned calcualteNumberOfEdges(unsigned gener) const;
+        virtual unsigned calcualteNumberOfNodes(unsigned gener)  const;
+        virtual unsigned calcualteNumberOfEdges(unsigned gener) const;
         unsigned getGeneration() const{ return generation;}
         double fractalDimension() const;
         double calculateTeoreticalExponent() const;

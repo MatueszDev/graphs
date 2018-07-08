@@ -1,0 +1,29 @@
+#ifndef GRAPHLT_H_
+#define GRAPHLT_H_
+
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <list>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <map>
+#include "graph"
+
+class GraphL: public Graph
+{
+    std::vector<std::list<unsigned>> net;
+
+    bool checkIfNeighbourExists(const std::list<unsigned>& list, const unsigned& neighbour) const;
+    void createChain(short length, unsigned& freeSpace,unsigned first, unsigned last);
+
+
+public:
+    GraphL(unsigned short u,unsigned short v);
+    void printNetwork(int version = 1) const;
+    void nextGeneration() override;
+    unsigned sumAllEdges() const override;
+    void createHistogramFile() const override;
+
+};

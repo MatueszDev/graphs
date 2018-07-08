@@ -4,8 +4,15 @@
 
 int main()
 {
+    GraphM mt22(2,2);
+    mt22.nextGeneration();
+    mt22.printNetwork(3);
+    mt22.nextGeneration();
 
-    std::cout << "List \n\n";
+    //std::cout << mt22.calcualteNumberOfNodes(2);
+
+    mt22.printNetwork(3);
+    /*std::cout << "List \n\n";
     GraphL graphL(1,2);
     for(int i =0; i < 5;i++)
         graphL.nextGeneration();
@@ -57,6 +64,6 @@ int main()
     graphMT12.nextGeneration();
     graphMT12.nextGeneration();
     graphMT12.makeSymmetry();
-    graphMT12.printNetwork(2);
+    graphMT12.printNetwork(2);*/
 
 }

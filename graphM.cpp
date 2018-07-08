@@ -45,6 +45,19 @@ void GraphM::printNetwork(int version) const
             std::cout << "\n";
         }
     }
+    if(version == 3)
+    {
+        size_t rows = net.size();
+        for(size_t i = 0; i < rows; i++)
+        {
+            for(size_t j = 0; j < i; j++)
+            {
+                if(net[i][j])
+                    std::cout << i <<" "<< j << "\n";
+
+            }
+        }
+    }
 }
 
 void GraphM::nextGeneration()
@@ -152,7 +165,8 @@ void GraphM::createHistogramFile() const
     file << calculateTeoreticalExponent() << "\n";
     for(size_t t = 0; t < max + 1; t++)
     {
-        file << t <<" "<< counterTable[t] << "\n";
+        if(counterTable[t])
+            file << t <<" "<< counterTable[t] << "\n";
     }
     file.close();
 

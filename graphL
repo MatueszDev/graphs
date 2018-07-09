@@ -20,7 +20,7 @@ class GraphL: public Graph
 
 
 public:
-    GraphL(short u, short v);
+    GraphL(unsigned short u, unsigned short v);
     void printNetwork(int version = 1) const;
     void nextGeneration() override;
     unsigned sumAllEdges() const override;

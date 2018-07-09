@@ -1,7 +1,7 @@
 #include "graphL"
 
 
-GraphL::GraphL(short u, short v): Graph(u,v)
+GraphL::GraphL(unsigned short u,unsigned short v): Graph(u,v)
 {
     net.resize(2);
     net[0] = {1};

@@ -1,17 +1,18 @@
 #include "graphM"
 #include "graphL"
 #include "graphMT"
+#include "graphLT"
 
 int main()
 {
-    GraphM mt22(2,2);
+    GraphLT mt22(2,2);
     mt22.nextGeneration();
-    mt22.printNetwork(3);
-    mt22.nextGeneration();
+    mt22.printNetwork(1);
+
 
     //std::cout << mt22.calcualteNumberOfNodes(2);
 
-    mt22.printNetwork(3);
+
     /*std::cout << "List \n\n";
     GraphL graphL(1,2);
     for(int i =0; i < 5;i++)

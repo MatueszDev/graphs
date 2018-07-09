@@ -11,19 +11,24 @@
 #include <map>
 #include "graph"
 
-class GraphL: public Graph
+class GraphLT: public Graph
 {
     std::vector<std::list<unsigned>> net;
 
     bool checkIfNeighbourExists(const std::list<unsigned>& list, const unsigned& neighbour) const;
     void createChain(short length, unsigned& freeSpace,unsigned first, unsigned last);
+    void createNotHookedChain(unsigned short length, unsigned& freeSpace,unsigned first);
 
 
 public:
-    GraphL(unsigned short u,unsigned short v);
+    GraphLT(unsigned short u,unsigned short v);
     void printNetwork(int version = 1) const;
     void nextGeneration() override;
     unsigned sumAllEdges() const override;
     void createHistogramFile() const override;
+    unsigned calcualteNumberOfNodes(unsigned) const override;
 
 };
+
+
+#endif

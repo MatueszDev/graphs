@@ -15,7 +15,7 @@ class GraphL: public Graph
 {
     std::vector<std::list<unsigned>> net;
 
-    bool checkIfNeighbourExists(const std::list<unsigned>& list, const unsigned& neighbour) const;
+    std::list<unsigned*>::iterator checkIfNeighbourExists(const std::list<unsigned>& list, const unsigned& neighbour) const;
     void createChain(short length, unsigned& freeSpace,unsigned first, unsigned last);
 
 

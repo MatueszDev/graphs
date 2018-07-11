@@ -7,8 +7,11 @@ int main()
 {
     GraphLT mt22(2,2);
     mt22.nextGeneration();
+    mt22.nextGeneration();
     mt22.printNetwork(1);
-
+//mt22.printNetwork(1);
+    /*mt22.nextGeneration();
+    mt22.printNetwork(1);*/
 
     //std::cout << mt22.calcualteNumberOfNodes(2);
 

@@ -18,10 +18,13 @@ void GraphL::nextGeneration()
     unsigned shift = rows; // index of first free node
 
     net.resize(nodes);
+
     for(size_t i = 0; i < rows; i++)
     {
-        for(auto neighbour = net[i].begin(); neighbour != net[i].end(); neighbour++ )
+        auto neighbour = net[i].begin();
+        while(neighbour != net[i].end())
         {
+
                 if(*neighbour > i && *neighbour < rows)
                 {
 
@@ -32,14 +35,14 @@ void GraphL::nextGeneration()
                     {
                         createChain(u,shift,i,*neighbour);
 
-                        net[*neighbour].remove(i);
-                        net[i].remove(*neighbour);
-                        neighbour--;
-
-
-
+                        int temp = *neighbour;
+                        neighbour++;
+                        net[temp].remove(i);
+                        net[i].remove(temp);
+                        continue;
                     }
                 }
+                neighbour++;
         }
     }
 
@@ -71,19 +74,19 @@ void GraphL::printNetwork(int version) const
     }
 }
 
-bool GraphL::checkIfNeighbourExists(const std::list<unsigned>& list, const unsigned& neighbour) const
+/*std::list<unsigned*>::iterator GraphL::checkIfNeighbourExists(const std::list<unsigned>& list, const unsigned& neighbour) const
 {
-    bool flag = false;
+    std::list<unsigned*>::iterator flag;
     for(auto it = list.begin(); it != list.end(); ++it)
     {
         if(*it == neighbour)
         {
-            flag = true;
+            flag = it;
             return flag;
         }
     }
-    return flag;
-}
+    return flag;*
+}*/
 
 
 unsigned GraphL::sumAllEdges() const

@@ -20,13 +20,14 @@ private:
     void createNotHookedChain(unsigned short length, unsigned& freeSpace,unsigned first);
     void generateUsingTreeMethod();
     void generateUsingFlowerMethod();
-
+    std::vector<int> startWalking(unsigned, unsigned, unsigned&);
+    bool checkInitialCondition(unsigned point, unsigned endCondition);
 
 public:
     MixGraph(unsigned short, unsigned short);
     void printNetwork(int) const;
     void nextGeneration();
-
+    unsigned startRandomWalk(unsigned, unsigned, unsigned);
 
 };
 

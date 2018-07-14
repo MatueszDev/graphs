@@ -8,12 +8,14 @@ int main()
 {
     MixGraph mt22(2,2);
     mt22.nextGeneration();
-    
-    mt22.printNetwork(2);
+    mt22.nextGeneration();
+    mt22.nextGeneration();
+
+    std::cout << mt22.startRandomWalk(5,2);
     /*for(int i =0; i < 5;i++)
         mt22.nextGeneration();
     */
-
+    //mt22.printNetwork(2);
 //mt22.printNetwork(1);
     /*mt22.nextGeneration();
     mt22.printNetwork(1);*/

@@ -1,9 +1,10 @@
 #include "mixGraph"
 
-
+using Random = effolkronium::random_static;
 
 MixGraph::MixGraph(unsigned short u, unsigned short v): u{u}, v{v}, numberOfEdges{1}, generation{0}{
-    if(u > v){
+    if(u > v)
+    {
         throw -5;
     }
     net.resize(2);
@@ -13,9 +14,9 @@ MixGraph::MixGraph(unsigned short u, unsigned short v): u{u}, v{v}, numberOfEdge
 
 void MixGraph::nextGeneration(){
     generation++;
-    using Random = effolkronium::random_static;
     auto chocie = Random::get<bool>();
-    if(chocie){
+    if(chocie)
+    {
         generateUsingTreeMethod();
     }
     else
@@ -155,4 +156,56 @@ void MixGraph::printNetwork(int version) const
             }
         }
     }
+}
+
+std::vector<int> v; MixGraph::startRandomWalk(unsigned point, unsigned endCondition, unsigned repetittion)
+{
+
+    bool permison = checkInitialCondition(point, endCondition);
+    std::vector<int> results;
+
+    if(permison)
+    {
+        for(int i = 0; i < repetittion; i++)
+            results.append(tartWalking(point, endCondition));
+    }
+    return results;
+}
+
+unsigned MixGraph::startWalking(unsigned point, unsigned endCondition)
+{
+        unsigned time = 0;
+        unsigned numberOfNeighbours = net[point].size();
+        if(numberOfNeighbours == endCondition)
+        {
+            std::cout << "Picked node has endCondition number of neighbours.\n";
+        }
+
+        while(numberOfNeighbours != endCondition)
+        {
+            ++time;
+            std::list<unsigned>::iterator nextNode = Random::get(net[point].begin(), net[point].end());
+            point = *nextNode;
+            numberOfNeighbours = net[point].size();
+        }
+        return time;
+}
+
+bool MixGraph::checkInitialCondition(unsigned point, unsigned endCondition)
+{
+    if(point >= net.size())
+    {
+        std::cout << "This node does not exists in current net.\n";
+        return false;
+    }
+
+    for(auto list:net)
+    {
+        if(list.size() == endCondition)
+        {
+            return true;
+        }
+    }
+    std::cout << "This netwok does not contain node with " << endCondition << " neighbours.\n";
+    return false;
 }

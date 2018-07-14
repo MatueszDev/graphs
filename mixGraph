@@ -1,0 +1,33 @@
+#ifndef MIXGRAPH_H_
+#define MIXGRAPH_H_
+
+#include <cmath>
+#include <iostream>
+#include <vector>
+#include <list>
+#include "random.hpp"
+
+class MixGraph{
+private:
+    unsigned short u;
+    unsigned short v;
+    unsigned numberOfEdges;
+    unsigned short generation;
+    std::vector<std::list<unsigned>> net;
+
+    unsigned calculateDesiredNumberOfNodes(bool tree);
+    void createChain(short length, unsigned& freeSpace,unsigned first, unsigned last);
+    void createNotHookedChain(unsigned short length, unsigned& freeSpace,unsigned first);
+    void generateUsingTreeMethod();
+    void generateUsingFlowerMethod();
+
+
+public:
+    MixGraph(unsigned short, unsigned short);
+    void printNetwork(int) const;
+    void nextGeneration();
+
+
+};
+
+#endif

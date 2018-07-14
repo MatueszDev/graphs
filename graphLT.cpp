@@ -112,7 +112,7 @@ void GraphLT::createHistogramFile() const
     }
 
     std::stringstream ss ;
-    ss << "datFiles/graphL" <<  u << v << "g"<<generation << ".dat";
+    ss << "datFiles/graphLT" <<  u << v << "g"<<generation << ".dat";
     std::string fileName = ss.str();
 
     std::ofstream file;

@@ -2,3 +2,4 @@
 datFiles/*
 wyniki/*
 *.exe
+*.o

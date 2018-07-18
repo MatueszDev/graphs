@@ -6,12 +6,19 @@
 
 int main()
 {
-    MixGraph mt22(2,2);
+    MixGraph mt22(3,4);
+    mt22.nextGeneration();
+    mt22.nextGeneration();
     mt22.nextGeneration();
     mt22.nextGeneration();
     mt22.nextGeneration();
 
-    std::cout << mt22.startRandomWalk(5,2);
+    unsigned startPoint = 461;
+    unsigned endCondition = 16;
+    unsigned numberOftrail = 10000;
+
+    std::vector<unsigned> results = mt22.startRandomWalk(startPoint, endCondition, numberOftrail);
+    mt22.generateRandomWalkCasesFile(results, startPoint, endCondition);
     /*for(int i =0; i < 5;i++)
         mt22.nextGeneration();
     */

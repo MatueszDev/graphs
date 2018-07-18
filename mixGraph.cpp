@@ -158,16 +158,16 @@ void MixGraph::printNetwork(int version) const
     }
 }
 
-std::vector<int> v; MixGraph::startRandomWalk(unsigned point, unsigned endCondition, unsigned repetittion)
+std::vector<unsigned>  MixGraph::startRandomWalk(unsigned point, unsigned endCondition, unsigned repetittion)
 {
 
     bool permison = checkInitialCondition(point, endCondition);
-    std::vector<int> results;
+    std::vector<unsigned> results;
 
     if(permison)
     {
-        for(int i = 0; i < repetittion; i++)
-            results.append(tartWalking(point, endCondition));
+        for(unsigned i = 0; i < repetittion; i++)
+            results.push_back(startWalking(point, endCondition));
     }
     return results;
 }
@@ -176,10 +176,7 @@ unsigned MixGraph::startWalking(unsigned point, unsigned endCondition)
 {
         unsigned time = 0;
         unsigned numberOfNeighbours = net[point].size();
-        if(numberOfNeighbours == endCondition)
-        {
-            std::cout << "Picked node has endCondition number of neighbours.\n";
-        }
+
 
         while(numberOfNeighbours != endCondition)
         {
@@ -199,6 +196,13 @@ bool MixGraph::checkInitialCondition(unsigned point, unsigned endCondition)
         return false;
     }
 
+    unsigned numberOfNeighbours = net[point].size();
+    if(numberOfNeighbours == endCondition)
+    {
+        std::cout << "Picked node has endCondition number of neighbours.\n";
+        return false;
+    }
+
     for(auto list:net)
     {
         if(list.size() == endCondition)
@@ -208,4 +212,21 @@ bool MixGraph::checkInitialCondition(unsigned point, unsigned endCondition)
     }
     std::cout << "This netwok does not contain node with " << endCondition << " neighbours.\n";
     return false;
+}
+
+void MixGraph::generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned point, unsigned endCondition)
+{
+    std::stringstream ss ;
+    ss << "datFiles/walkCases"<< u << v << "_" << data.size()<< "_s"<<point <<"_d"<<endCondition << ".dat";
+    std::string fileName = ss.str();
+
+    std::ofstream file;
+    file.open(fileName);
+    file << generation << "\n";
+    for(auto el:data)
+    {
+        file << el <<"\n";
+    }
+    file.close();
+
 }

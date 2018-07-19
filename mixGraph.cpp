@@ -44,7 +44,7 @@ void MixGraph::generateUsingTreeMethod(){
                     if(u>1)
                     {
                         createChain(u,shift,i,*neighbour);
-                        int temp = *neighbour;
+                        unsigned temp = *neighbour;
                         neighbour++;
                         net[temp].remove(i);
                         net[i].remove(temp);
@@ -79,7 +79,7 @@ void MixGraph::generateUsingFlowerMethod(){
                     {
                         createChain(u,shift,i,*neighbour);
 
-                        int temp = *neighbour;
+                        unsigned temp = *neighbour;
                         neighbour++;
                         net[temp].remove(i);
                         net[i].remove(temp);
@@ -229,4 +229,75 @@ void MixGraph::generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned 
     }
     file.close();
 
+}
+
+void MixGraph::nextGenerationV2()
+{
+    generation++;
+    size_t rows = net.size();
+    for(size_t i = 0; i < rows; ++i)
+    {
+        auto neighbour = net[i].begin();
+        while(neighbour != net[i].end())
+        {
+
+                if(*neighbour > i && *neighbour < rows)
+                {
+                    bool caseTree = Random::get<bool>();
+                    if(caseTree)
+                    {
+                        generateUsingTreeMethodV2(i, neighbour);
+                    }
+                    else{
+                        generateUsingFlowerMethodV2(i, neighbour);
+                    }
+
+                }
+                
+                    neighbour++;
+        }
+
+    }
+}
+
+void MixGraph::generateUsingTreeMethodV2(size_t& row, std::list<unsigned>::iterator& neighbour)
+{
+    size_t netSize = net.size();
+    size_t newNodes = u - 1 + (v/2)*2;
+    net.resize(newNodes + netSize);
+    unsigned freeSpace = netSize;
+
+    createNotHookedChain(v/2, freeSpace, row);
+    createNotHookedChain(v/2, freeSpace, *neighbour);
+
+    if(u>1)
+    {
+        createChain(u, freeSpace, row, *neighbour);
+        unsigned temp = *neighbour;
+        neighbour++;
+        net[temp].remove(row);
+        net[row].remove(temp);
+    }
+
+}
+
+void MixGraph::generateUsingFlowerMethodV2(size_t& row, std::list<unsigned>::iterator& neighbour)
+{
+    size_t netSize = net.size();
+    size_t newNodes = u - 1 + v - 1;
+    net.resize(newNodes + netSize);
+    unsigned freeSpace = netSize;
+
+    createChain(v, freeSpace, row, *neighbour);
+
+
+    if(u>1)
+    {
+        createChain(u, freeSpace, row, *neighbour);
+
+        unsigned temp = *neighbour;
+        neighbour++;
+        net[temp].remove(row);
+        net[row].remove(temp);
+    }
 }

@@ -6,23 +6,22 @@
 
 int main()
 {
-    MixGraph mt22(3,4);
-    mt22.nextGeneration();
-    mt22.nextGeneration();
-    mt22.nextGeneration();
-    mt22.nextGeneration();
-    mt22.nextGeneration();
+    MixGraph mt22(2,2);
+    mt22.nextGenerationV2();
+    mt22.nextGenerationV2();
+    //mt22.nextGenerationV2();
+
 
     unsigned startPoint = 461;
     unsigned endCondition = 16;
     unsigned numberOftrail = 10000;
 
-    std::vector<unsigned> results = mt22.startRandomWalk(startPoint, endCondition, numberOftrail);
-    mt22.generateRandomWalkCasesFile(results, startPoint, endCondition);
+    /*std::vector<unsigned> results = mt22.startRandomWalk(startPoint, endCondition, numberOftrail);
+    mt22.generateRandomWalkCasesFile(results, startPoint, endCondition);*/
     /*for(int i =0; i < 5;i++)
         mt22.nextGeneration();
     */
-    //mt22.printNetwork(2);
+    mt22.printNetwork(2);
 //mt22.printNetwork(1);
     /*mt22.nextGeneration();
     mt22.printNetwork(1);*/

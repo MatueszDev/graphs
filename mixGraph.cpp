@@ -253,8 +253,10 @@ void MixGraph::nextGenerationV2()
                     }
 
                 }
-                
-                    neighbour++;
+                if(u == 1 or *neighbour >= rows or *neighbour <= i)
+                {
+                  neighbour++;
+                }
         }
 
     }

@@ -253,7 +253,7 @@ void MixGraph::nextGenerationV2()
                     }
 
                 }
-                
+
                     neighbour++;
         }
 
@@ -300,4 +300,42 @@ void MixGraph::generateUsingFlowerMethodV2(size_t& row, std::list<unsigned>::ite
         net[temp].remove(row);
         net[row].remove(temp);
     }
+}
+
+void MixGraph::createHistogramFile() const
+{
+    unsigned maxDegree = net[0].size();
+    for(auto& row:net)
+    {
+        if(row.size() > maxDegree)
+            {
+                maxDegree = row.size();
+            }
+    }
+
+    unsigned* counterTable = new unsigned[maxDegree + 1]{0};
+
+    //std::map<unsigned,unsigned> counterTable;
+
+    for(auto& row:net)
+    {
+        counterTable[row.size()]++;
+    }
+
+    std::stringstream ss ;
+    ss << "datFiles/graphLT" <<  u << v << "g"<<generation << ".dat";
+    std::string fileName = ss.str();
+
+    std::ofstream file;
+    file.open(fileName);
+    file << generation << "\n";
+    file << calculateTeoreticalExponent() << "\n";
+    for(size_t t = 0; t < maxDegree + 1; t++)
+    {
+        if(counterTable[t])
+            file << t <<" "<< counterTable[t] << "\n";
+    }
+    file.close();
+
+    delete [] counterTable;
 }

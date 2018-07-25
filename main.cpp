@@ -6,7 +6,7 @@
 
 int main()
 {
-    MixGraph mt22(2,2);
+    MixGraph mt22(1,3);
     mt22.nextGenerationV2();
     mt22.nextGenerationV2();
     mt22.nextGenerationV2();
@@ -20,9 +20,10 @@ int main()
     mt.printNetwork(2);
     mt.createHistogramFile();*/
 
-    unsigned startPoint = 461;
-    unsigned endCondition = 16;
-    unsigned numberOftrail = 10000;
+
+    // unsigned startPoint = 461;
+    // unsigned endCondition = 16;
+    // unsigned numberOftrail = 10000;
 
     /*std::vector<unsigned> results = mt22.startRandomWalk(startPoint, endCondition, numberOftrail);
     mt22.generateRandomWalkCasesFile(results, startPoint, endCondition);*/

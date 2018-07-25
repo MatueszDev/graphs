@@ -1,14 +1,13 @@
 import matplotlib.pyplot as plt
 
 plt.clf()
-files = ["datFiles/graphM22g5.dat","datFiles/graphL22g10.dat","datFiles/graphLT22g2.dat","datFiles/graphLT22g7.dat"]
+files = ["datFiles\graphLT34g3.dat"]
 
 for file in files:
     with open(file) as data:
         degree = []
         amount = []
         generation = int(data.readline())
-        exponent = float(data.readline())
         degrees = [2**i for i in range(1,generation+1,1)] #create k = 2**m where m = 1,2..,n
         
         for point in data.readlines():
@@ -29,7 +28,7 @@ for file in files:
         plt.ylabel("occurance")
         #plt.bar(degree, amount)
      
-        plt.loglog(degree, amount,'.r')
-        #plt.plot(degree,amount,'.r')
+        #plt.loglog(degree, amount,'.r')
+        plt.plot(degree,amount,'.r')
         plt.savefig("wyniki/{}.pdf".format(file[8:-4]))
         plt.clf()

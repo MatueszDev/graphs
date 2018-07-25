@@ -251,6 +251,17 @@ void MixGraph::nextGenerationV2()
                     else{
                         generateUsingFlowerMethodV2(i, neighbour);
                     }
+                    /*
+                    double caseTree = Random::get<>(); // various probalility
+                    if(caseTree < 0.75)
+                    {
+                        generateUsingTreeMethodV2(i, neighbour);
+                    }
+                    else{
+                        generateUsingFlowerMethodV2(i, neighbour);
+                    }
+
+                    */
 
                 }
 
@@ -329,7 +340,6 @@ void MixGraph::createHistogramFile() const
     std::ofstream file;
     file.open(fileName);
     file << generation << "\n";
-    file << calculateTeoreticalExponent() << "\n";
     for(size_t t = 0; t < maxDegree + 1; t++)
     {
         if(counterTable[t])

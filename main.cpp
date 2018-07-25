@@ -9,8 +9,16 @@ int main()
     MixGraph mt22(2,2);
     mt22.nextGenerationV2();
     mt22.nextGenerationV2();
-    //mt22.nextGenerationV2();
+    mt22.nextGenerationV2();
+    mt22.printNetwork(2);
+    mt22.createHistogramFile();
 
+    /*MixGraph mt(3,4);
+    mt.nextGenerationV2();
+    mt.nextGenerationV2();
+    mt.nextGenerationV2();
+    mt.printNetwork(2);
+    mt.createHistogramFile();*/
 
     unsigned startPoint = 461;
     unsigned endCondition = 16;
@@ -21,7 +29,7 @@ int main()
     /*for(int i =0; i < 5;i++)
         mt22.nextGeneration();
     */
-    mt22.printNetwork(2);
+
 //mt22.printNetwork(1);
     /*mt22.nextGeneration();
     mt22.printNetwork(1);*/

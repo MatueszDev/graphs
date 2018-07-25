@@ -21,6 +21,5 @@ for file in files:
         keys = list(dat.keys())
         values = list(values)
         plt.plot(keys, values,'.r')
-        plt.show()
         plt.savefig("wyniki/{}.pdf".format(file[8:-4]))
-        plt.clf()
+        plt.show()

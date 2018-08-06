@@ -264,7 +264,7 @@ void MixGraph::nextGenerationV2()
                     */
 
                 }
-                if(u == 1 or *neighbour >= rows or *neighbour <= i)
+                if((u == 1 || *neighbour >= rows) || (*neighbour <= i))
                 {
                   neighbour++;
                 }
@@ -350,4 +350,58 @@ void MixGraph::createHistogramFile() const
     file.close();
 
     delete [] counterTable;
+}
+
+std::vector<std::vector<unsigned>> MixGraph::calculateTimeFromEachNodToHub()
+{
+    std::vector<unsigned> hubs = calculateHubs();
+    std::vector<std::vector<unsigned>> results (hubs.size());
+
+    size_t hubsSize = hubs.size();
+    size_t netSize = net.size();
+
+    for(size_t i = 0; i < hubsSize; i++)
+        results[i].resize(netSize);
+
+     for(size_t j = 0; j < hubsSize; ++j)
+         for(size_t i = 0; i < netSize; ++i)
+             results[j][i] = randomWalk(i,hubs[j]);
+
+    return results;
+}
+
+unsigned MixGraph::randomWalk(unsigned startNode, unsigned endNode)
+{
+    unsigned time = 0;
+    unsigned currentNode = startNode;
+
+    while(currentNode != endNode)
+    {
+        ++time;
+        std::list<unsigned>::iterator nextNode = Random::get(net[currentNode].begin(), net[currentNode].end());
+        currentNode = *nextNode;
+    }
+    return time;
+}
+
+std::vector<unsigned> MixGraph::calculateHubs()
+{
+    unsigned maxDegree = net[0].size();
+    std::vector<unsigned> hubs = {0} ;
+    size_t netSize = net.size();
+
+    for(size_t node = 1; node < netSize; ++node)
+    {
+        unsigned currentDegree = net[node].size();
+        if(currentDegree == maxDegree)
+            hubs.push_back(node);
+        else if ( currentDegree > maxDegree)
+        {
+            maxDegree = currentDegree;
+            hubs.clear();
+            hubs.push_back(node);
+        }
+    }
+
+    return hubs;
 }

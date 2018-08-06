@@ -26,6 +26,8 @@ private:
     void generateUsingFlowerMethodV2(size_t& row, std::list<unsigned>::iterator& neighbour);
     unsigned startWalking(unsigned, unsigned);
     bool checkInitialCondition(unsigned point, unsigned endCondition);
+    std::vector<unsigned> calculateHubs();
+    unsigned randomWalk(unsigned startNode, unsigned endNode);
 
 public:
     MixGraph(unsigned short, unsigned short);
@@ -35,6 +37,7 @@ public:
     std::vector<unsigned> startRandomWalk(unsigned, unsigned, unsigned);
     void generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned point, unsigned endCondition);
     void createHistogramFile() const;
+    std::vector<std::vector<unsigned>> calculateTimeFromEachNodToHub();
 };
 
 #endif

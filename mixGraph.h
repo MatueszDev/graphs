@@ -42,7 +42,7 @@ public:
     std::vector<unsigned> startRandomWalk(unsigned, unsigned, unsigned);
     void generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned point, unsigned endCondition);
     void createHistogramFile() const;
-    std::vector<std::vector<unsigned>> calculateTimeFromEachNodToHub();
+    std::vector<std::vector<double>> calculateTimeFromEachNodToHub(int numberOfrepettition);
 	void exportNetworkToFile();
 };
 

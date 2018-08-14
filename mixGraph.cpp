@@ -376,20 +376,25 @@ void MixGraph::createHistogramFile() const
     delete [] counterTable;
 }
 
-std::vector<std::vector<unsigned>> MixGraph::calculateTimeFromEachNodToHub()
+std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int numberOfrepettition)
 {
     std::vector<unsigned> hubs = calculateHubs();
-    std::vector<std::vector<unsigned>> results (hubs.size());
+    std::vector<std::vector<double>> results (hubs.size());
 
     size_t hubsSize = hubs.size();
     size_t netSize = net.size();
 
     for(size_t i = 0; i < hubsSize; i++)
-        results[i].resize(netSize);
+		results[i].resize(netSize, 0);
 
-     for(size_t j = 0; j < hubsSize; ++j)
-         for(size_t i = 0; i < netSize; ++i)
-             results[j][i] = randomWalk(i,hubs[j]);
+	for(int repettition = 0; repettition < numberOfrepettition; ++repettition)
+		for(size_t j = 0; j < hubsSize; ++j)
+			for(size_t i = 0; i < netSize; ++i)
+				results[j][i] += randomWalk(i,hubs[j]);
+
+	for (size_t j = 0; j < hubsSize; ++j)
+		for (size_t i = 0; i < netSize; ++i)
+			results[j][i] /= numberOfrepettition;
 
     return results;
 }

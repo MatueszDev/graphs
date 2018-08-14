@@ -7,7 +7,11 @@
 #include <list>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
+#include <string>
+#include <iterator>
 #include "random.hpp"
+#include "functions.h"
 
 class MixGraph{
 private:
@@ -31,6 +35,7 @@ private:
 
 public:
     MixGraph(unsigned short, unsigned short);
+	MixGraph(std::string);
     void printNetwork(int) const;
     void nextGeneration();
     void nextGenerationV2();
@@ -38,6 +43,7 @@ public:
     void generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned point, unsigned endCondition);
     void createHistogramFile() const;
     std::vector<std::vector<unsigned>> calculateTimeFromEachNodToHub();
+	void exportNetworkToFile();
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include "mixGraph"
+#include "mixGraph.h"
 
 using Random = effolkronium::random_static;
 
@@ -10,6 +10,30 @@ MixGraph::MixGraph(unsigned short u, unsigned short v): u{u}, v{v}, numberOfEdge
     net.resize(2);
     net[0] = {1};
     net[1] = {0};
+}
+
+MixGraph::MixGraph(std::string file): numberOfEdges{0}
+{
+
+	std::ifstream networkFile;
+	networkFile.open(file);
+
+	if (!networkFile.is_open())
+	{
+		std::cerr << "Can not open " << file << "\n";
+		return;
+	}
+	size_t netSize;
+	networkFile >> generation;
+	networkFile >> u >> v;
+	networkFile >> netSize;
+	net.resize(netSize);
+	unsigned node, neighbour;
+
+	while(networkFile >> node >> neighbour)
+	{
+		net[node].push_back(neighbour);
+	}
 }
 
 void MixGraph::nextGeneration(){
@@ -368,6 +392,30 @@ std::vector<std::vector<unsigned>> MixGraph::calculateTimeFromEachNodToHub()
              results[j][i] = randomWalk(i,hubs[j]);
 
     return results;
+}
+
+void MixGraph::exportNetworkToFile()
+{
+	std::stringstream ss;
+	ss << "net" << u << v << "g" << generation << ".dat";
+	std::string fileName = ss.str();
+
+	std::ofstream file;
+	file.open(fileName);
+	if (!file.is_open())
+	{
+		std::cerr << "Can not open file: " << fileName << std::endl;
+	}
+	file << generation << "\n";
+	file << u << " " << v << "\n";
+	file << net.size() << "\n";
+	for (size_t t = 0; t < net.size(); t++)
+	{
+		for (auto neighbour : net[t])
+		{
+			file << t << " " << neighbour << "\n";
+		}
+	}
 }
 
 unsigned MixGraph::randomWalk(unsigned startNode, unsigned endNode)

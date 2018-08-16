@@ -19,19 +19,20 @@ private:
     unsigned short v;
     unsigned numberOfEdges;
     unsigned short generation;
-    std::vector<std::list<unsigned>> net;
+	mutable std::vector<std::list<unsigned>> net;
+	std::string uniqueNetworkId = "";
 
-    unsigned calculateDesiredNumberOfNodes(bool tree);
-    void createChain(short length, unsigned& freeSpace,unsigned first, unsigned last);
-    void createNotHookedChain(unsigned short length, unsigned& freeSpace,unsigned first);
+    unsigned calculateDesiredNumberOfNodes(bool);
+    void createChain(short length, unsigned&, unsigned, unsigned);
+    void createNotHookedChain(unsigned short, unsigned&, unsigned);
     void generateUsingTreeMethod();
     void generateUsingFlowerMethod();
-    void generateUsingTreeMethodV2(size_t& row, std::list<unsigned>::iterator& neighbour);
-    void generateUsingFlowerMethodV2(size_t& row, std::list<unsigned>::iterator& neighbour);
+    void generateUsingTreeMethodV2(size_t&, std::list<unsigned>::iterator&);
+    void generateUsingFlowerMethodV2(size_t&, std::list<unsigned>::iterator&);
     unsigned startWalking(unsigned, unsigned);
-    bool checkInitialCondition(unsigned point, unsigned endCondition);
+    bool checkInitialCondition(unsigned, unsigned);
     std::vector<unsigned> calculateHubs();
-    unsigned randomWalk(unsigned startNode, unsigned endNode);
+    unsigned randomWalk(unsigned, unsigned) const;
 
 public:
     MixGraph(unsigned short, unsigned short);
@@ -40,10 +41,11 @@ public:
     void nextGeneration();
     void nextGenerationV2();
     std::vector<unsigned> startRandomWalk(unsigned, unsigned, unsigned);
-    void generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned point, unsigned endCondition);
+    void generateRandomWalkCasesFile(std::vector<unsigned>, unsigned, unsigned);
     void createHistogramFile() const;
-    std::vector<std::vector<double>> calculateTimeFromEachNodToHub(int numberOfrepettition);
-	void exportNetworkToFile();
+    std::vector<std::vector<double>> calculateTimeFromEachNodToHub(int);
+	void exportNetworkToFile() const;
+	void exportRandomWalkResultToDataFile(std::vector<std::vector<double>>&) const;
 };
 
 #endif

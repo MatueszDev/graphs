@@ -398,7 +398,7 @@ std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int num
 {
     std::vector<unsigned> hubs = calculateHubs();
     std::vector<std::vector<double>> results (hubs.size());
-    
+
     size_t hubsSize = hubs.size();
     size_t netSize = net.size();
 
@@ -406,9 +406,12 @@ std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int num
 		results[i].resize(netSize, 0);
 
 	for(int repetition = 0; repetition < numberOfRepetition; ++repetition)
+	{
+		std::cout << "Repetition number: "<< repetition + 1 << ".\n";
 		for(size_t j = 0; j < hubsSize; ++j)
 			for(size_t i = 0; i < netSize; ++i)
 				results[j][i] += randomWalk(i,hubs[j]);
+	}
 
 	for (size_t j = 0; j < hubsSize; ++j)
 		for (size_t i = 0; i < netSize; ++i)
@@ -465,7 +468,7 @@ void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>
 	{
 		nodeDegree[i] = net[i].size();
 	}
-	
+
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		std::string fileName = "";

@@ -4,3 +4,5 @@ wyniki/*
 *.exe
 *.o
 GraphVisualizer.jar
+*.dat
+randomWalkDat/*

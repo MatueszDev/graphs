@@ -1,6 +1,14 @@
-#include "mixGraph"
+#include "mixGraph.h"
 
 using Random = effolkronium::random_static;
+const char letters[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'o', 'p', 'r' };
+
+void generateRandomString(std::string& str, int length)
+{
+	for (int len = 0; len < length; ++len)
+		str.push_back(*Random::get(letters));
+}
+
 
 MixGraph::MixGraph(unsigned short u, unsigned short v): u{u}, v{v}, numberOfEdges{1}, generation{0}{
     if(u > v)
@@ -10,12 +18,41 @@ MixGraph::MixGraph(unsigned short u, unsigned short v): u{u}, v{v}, numberOfEdge
     net.resize(2);
     net[0] = {1};
     net[1] = {0};
+
+	generateRandomString(uniqueNetworkId, 4);
+}
+
+MixGraph::MixGraph(std::string file): numberOfEdges{0}
+{
+
+	std::ifstream networkFile;
+	networkFile.open(file);
+
+	if (!networkFile.is_open())
+	{
+		std::cerr << "Can not open " << file << "\n";
+		return;
+	}
+	size_t netSize;
+	networkFile >> generation;
+	networkFile >> u >> v;
+	networkFile >> uniqueNetworkId;
+	networkFile >> netSize;
+	net.resize(netSize);
+	unsigned node, neighbour;
+
+	while(networkFile >> node >> neighbour)
+	{
+		net[node].push_back(neighbour);
+		numberOfEdges += 1;
+	}
+	numberOfEdges >>= 1;
 }
 
 void MixGraph::nextGeneration(){
     generation++;
-    auto chocie = Random::get<bool>();
-    if(chocie)
+    auto choice = Random::get<bool>();
+    if(choice)
     {
         generateUsingTreeMethod();
     }
@@ -24,10 +61,10 @@ void MixGraph::nextGeneration(){
 }
 
 void MixGraph::generateUsingTreeMethod(){
-    unsigned numberOfnewNodes = calculateDesiredNumberOfNodes(true);
+    unsigned numberOfNewNodes = calculateDesiredNumberOfNodes(true);
     size_t rows = net.size();
     unsigned shift = rows;
-    net.resize(rows + numberOfnewNodes);
+    net.resize(rows + numberOfNewNodes);
 
     for(size_t i = 0; i < rows; i++)
     {
@@ -58,10 +95,10 @@ void MixGraph::generateUsingTreeMethod(){
 }
 
 void MixGraph::generateUsingFlowerMethod(){
-    unsigned numberOfnewNodes = calculateDesiredNumberOfNodes(false);
+    unsigned numberOfNewNodes = calculateDesiredNumberOfNodes(false);
     size_t rows = net.size();
     unsigned shift = rows;
-    net.resize(rows + numberOfnewNodes);
+    net.resize(rows + numberOfNewNodes);
 
     for(size_t i = 0; i < rows; i++)
     {
@@ -93,14 +130,14 @@ void MixGraph::generateUsingFlowerMethod(){
 
 unsigned MixGraph::calculateDesiredNumberOfNodes(bool tree){
     if(tree){
-        unsigned numberOfnewNodes = (2*(v/2) + u - 1) * numberOfEdges;
+        unsigned numberOfNewNodes = (2*(v/2) + u - 1) * numberOfEdges;
         numberOfEdges *= (2*(v/2) + u);
-        return numberOfnewNodes;
+        return numberOfNewNodes;
     }
     else{
-        unsigned numberOfnewNodes = (v-1 + u-1) * numberOfEdges;
+        unsigned numberOfNewNodes = (v-1 + u-1) * numberOfEdges;
         numberOfEdges *= (u + v);
-        return numberOfnewNodes;
+        return numberOfNewNodes;
     }
 }
 
@@ -217,7 +254,7 @@ bool MixGraph::checkInitialCondition(unsigned point, unsigned endCondition)
 void MixGraph::generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned point, unsigned endCondition)
 {
     std::stringstream ss ;
-    ss << "datFiles/walkCases"<< u << v << "_" << data.size()<< "_s"<<point <<"_d"<<endCondition << ".dat";
+    ss << "D:\\agh\\semestr 6\\pracaInz\\programdatFiles\\walkCases"<< u << v << "_" << data.size()<< "_s"<<point <<"_d"<<endCondition << ".dat";
     std::string fileName = ss.str();
 
     std::ofstream file;
@@ -264,7 +301,7 @@ void MixGraph::nextGenerationV2()
                     */
 
                 }
-                if(u == 1 or *neighbour >= rows or *neighbour <= i)
+                if((u == 1 || *neighbour >= rows) || (*neighbour <= i))
                 {
                   neighbour++;
                 }
@@ -336,11 +373,16 @@ void MixGraph::createHistogramFile() const
     }
 
     std::stringstream ss ;
-    ss << "datFiles/graphLT" <<  u << v << "g"<<generation << ".dat";
+    ss << "D:\\agh\\semestr 6\\pracaInz\\program\\datFiles\\graphLT" <<  u << v << "g"<<generation << ".dat";
     std::string fileName = ss.str();
 
     std::ofstream file;
     file.open(fileName);
+	if (!file.is_open())
+	{
+		std::cerr << "Can not open: " << fileName << " for histogram\n";
+		return;
+	}
     file << generation << "\n";
     for(size_t t = 0; t < maxDegree + 1; t++)
     {
@@ -350,4 +392,123 @@ void MixGraph::createHistogramFile() const
     file.close();
 
     delete [] counterTable;
+}
+
+std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int numberOfRepetition)
+{
+    std::vector<unsigned> hubs = calculateHubs();
+    std::vector<std::vector<double>> results (hubs.size());
+
+    size_t hubsSize = hubs.size();
+    size_t netSize = net.size();
+
+    for(size_t i = 0; i < hubsSize; i++)
+		results[i].resize(netSize, 0);
+
+	for(int repetition = 0; repetition < numberOfRepetition; ++repetition)
+	{
+		std::cout << "Repetition number: "<< repetition + 1 << ".\n";
+		for(size_t j = 0; j < hubsSize; ++j)
+			for(size_t i = 0; i < netSize; ++i)
+				results[j][i] += randomWalk(i,hubs[j]);
+	}
+
+	for (size_t j = 0; j < hubsSize; ++j)
+		for (size_t i = 0; i < netSize; ++i)
+			results[j][i] /= numberOfRepetition;
+
+    return results;
+}
+
+void MixGraph::exportNetworkToFile() const
+{
+	std::stringstream ss;
+	ss << "net" << u << v << "g" << generation << ".dat";
+	std::string fileName = ss.str();
+
+	std::ofstream file;
+	file.open(fileName);
+	if (!file.is_open())
+	{
+		std::cerr << "Can not open file: " << fileName << std::endl;
+	}
+	file << generation << "\n";
+	file << u << " " << v << "\n";
+	file << uniqueNetworkId << "\n";
+	file << net.size() << "\n";
+	for (size_t t = 0; t < net.size(); t++)
+	{
+		for (auto neighbour : net[t])
+		{
+			file << t << " " << neighbour << "\n";
+		}
+	}
+
+	file.close();
+}
+
+unsigned MixGraph::randomWalk(unsigned startNode, unsigned endNode) const
+{
+    unsigned time = 0;
+    unsigned currentNode = startNode;
+
+    while(currentNode != endNode)
+    {
+        ++time;
+        std::list<unsigned>::iterator nextNode = Random::get(net[currentNode].begin(), net[currentNode].end());
+        currentNode = *nextNode;
+    }
+    return time;
+}
+
+void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>> &data) const
+{
+	int* nodeDegree = new int[net.size()];
+	for (size_t i = 0; i < net.size(); ++i)
+	{
+		nodeDegree[i] = net[i].size();
+	}
+
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		std::string fileName = "";
+		generateRandomString(fileName, 6);
+		std::string filePath = "D:\\agh\\semestr 6\\pracaInz\\program\\randomWalkDat\\" + fileName + ".dat";
+
+		std::ofstream file(filePath);
+		if (!file.is_open())
+		{
+			std::cerr << "Can not open the file: " << filePath << "\n";
+			return;
+		}
+		file << generation << "\n";
+		file << u << " " << v << "\n";
+		file << uniqueNetworkId << "\n";
+		file << "Hub number " << i << "\n";
+		for (size_t j = 0; j < net.size(); ++j)
+			file << nodeDegree[j] << " " << data[i][j] << "\n";
+		file.close();
+	}
+}
+
+std::vector<unsigned> MixGraph::calculateHubs()
+{
+    unsigned maxDegree = net[0].size();
+    std::vector<unsigned> hubs = {0} ;
+    size_t netSize = net.size();
+
+    for(size_t node = 1; node < netSize; ++node)
+    {
+        unsigned currentDegree = net[node].size();
+        if(currentDegree == maxDegree)
+            hubs.push_back(node);
+        else if ( currentDegree > maxDegree)
+        {
+            maxDegree = currentDegree;
+            hubs.clear();
+            hubs.push_back(node);
+        }
+    }
+
+    return hubs;
 }

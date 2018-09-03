@@ -2,6 +2,7 @@ import glob
 from pprint import pprint as pp
 import matplotlib.pyplot as plt
 import numpy as np
+from collections import OrderedDict
 
 networks = {}
 
@@ -10,6 +11,7 @@ for file in glob.glob('randomWalkDat/*.dat'):
         generation = data.readline()[:-1]
         u,v = data.readline().split()
         uniqueNetworkId = data.readline()[:-1]
+        probability = data.readline()[:-1]
         hub = data.readline().split()[2]
         networks.setdefault(uniqueNetworkId,{})
         networks[uniqueNetworkId].setdefault(hub,{})
@@ -20,11 +22,12 @@ for file in glob.glob('randomWalkDat/*.dat'):
 plt.style.use('bmh')
 for net in networks.values():
     for hub in net.keys():
-        for degree, values in net[hub].items():
+        ordered = OrderedDict(sorted(net[hub].items()))
+        for degree, values in ordered.items():
             plt.plot([degree for i in values], values, '.')
         plt.xlabel("Degree of node")
         plt.ylabel("Time to hub")
-        plt.title("Random walk from each node to hub {} of {}".format(int(hub) + 1, len(net)))
-        plt.plot(list(net[hub].keys()), [np.average(values) for values in net[hub].values()])
+        plt.title("Random walk from each node to hub {} of {} with {} tree".format(int(hub) + 1, len(net), probability))
+        plt.plot(list(ordered.keys()), [np.average(values) for values in ordered.values()])
         plt.show()
-        break
+        plt.clf()

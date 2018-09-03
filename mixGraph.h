@@ -21,6 +21,7 @@ private:
     unsigned short generation;
 	mutable std::vector<std::list<unsigned>> net;
 	std::string uniqueNetworkId = "";
+    double probability;
 
     unsigned calculateDesiredNumberOfNodes(bool);
     void createChain(short length, unsigned&, unsigned, unsigned);
@@ -35,7 +36,7 @@ private:
     unsigned randomWalk(unsigned, unsigned) const;
 
 public:
-    MixGraph(unsigned short, unsigned short);
+    MixGraph(unsigned short, unsigned short, double);
 	MixGraph(std::string);
     void printNetwork(int) const;
     void nextGeneration();

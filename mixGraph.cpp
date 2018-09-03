@@ -10,7 +10,9 @@ void generateRandomString(std::string& str, int length)
 }
 
 
-MixGraph::MixGraph(unsigned short u, unsigned short v): u{u}, v{v}, numberOfEdges{1}, generation{0}{
+MixGraph::MixGraph(unsigned short u, unsigned short v, double probability=0.5):
+ 				   u{u}, v{v}, numberOfEdges{1}, generation{0}, probability{probability}
+{
     if(u > v)
     {
         throw -5;
@@ -37,6 +39,7 @@ MixGraph::MixGraph(std::string file): numberOfEdges{0}
 	networkFile >> generation;
 	networkFile >> u >> v;
 	networkFile >> uniqueNetworkId;
+	networkFile >> probability;
 	networkFile >> netSize;
 	net.resize(netSize);
 	unsigned node, neighbour;
@@ -51,7 +54,7 @@ MixGraph::MixGraph(std::string file): numberOfEdges{0}
 
 void MixGraph::nextGeneration(){
     generation++;
-    auto choice = Random::get<bool>();
+    auto choice = Random::get<bool>(probability);
     if(choice)
     {
         generateUsingTreeMethod();
@@ -423,7 +426,7 @@ std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int num
 void MixGraph::exportNetworkToFile() const
 {
 	std::stringstream ss;
-	ss << "net" << u << v << "g" << generation << ".dat";
+	ss << "net" << u << v << "g" << generation << uniqueNetworkId << ".dat";
 	std::string fileName = ss.str();
 
 	std::ofstream file;
@@ -435,6 +438,7 @@ void MixGraph::exportNetworkToFile() const
 	file << generation << "\n";
 	file << u << " " << v << "\n";
 	file << uniqueNetworkId << "\n";
+	file << probability << "\n";
 	file << net.size() << "\n";
 	for (size_t t = 0; t < net.size(); t++)
 	{
@@ -484,6 +488,7 @@ void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>
 		file << generation << "\n";
 		file << u << " " << v << "\n";
 		file << uniqueNetworkId << "\n";
+		file << probability << "\n";
 		file << "Hub number " << i << "\n";
 		for (size_t j = 0; j < net.size(); ++j)
 			file << nodeDegree[j] << " " << data[i][j] << "\n";

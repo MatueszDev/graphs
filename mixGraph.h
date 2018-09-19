@@ -47,6 +47,7 @@ public:
     std::vector<std::vector<double>> calculateTimeFromEachNodToHub(int);
 	void exportNetworkToFile() const;
 	void exportRandomWalkResultToDataFile(std::vector<std::vector<double>>&) const;
+    int countOne();
 };
 
 #endif

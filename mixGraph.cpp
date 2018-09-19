@@ -283,7 +283,7 @@ void MixGraph::nextGenerationV2()
 
                 if(*neighbour > i && *neighbour < rows)
                 {
-                    bool caseTree = Random::get<bool>();
+                    bool caseTree = Random::get<bool>(probability);
                     if(caseTree)
                     {
                         generateUsingTreeMethodV2(i, neighbour);
@@ -376,7 +376,7 @@ void MixGraph::createHistogramFile() const
     }
 
     std::stringstream ss ;
-    ss << "D:\\agh\\semestr 6\\pracaInz\\program\\datFiles\\graphLT" <<  u << v << "g"<<generation << ".dat";
+    ss << "D:\\agh\\semestr6\\pracaInz\\program\\datFiles\\graphLT" <<  u << v << "g"<<generation << ".dat";
     std::string fileName = ss.str();
 
     std::ofstream file;
@@ -477,7 +477,7 @@ void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>
 	{
 		std::string fileName = "";
 		generateRandomString(fileName, 6);
-		std::string filePath = "D:\\agh\\semestr 6\\pracaInz\\program\\randomWalkDat\\" + fileName + ".dat";
+		std::string filePath = "D:\\agh\\semestr6\\pracaInz\\program\\randomWalkDat\\" + fileName + ".dat";
 
 		std::ofstream file(filePath);
 		if (!file.is_open())
@@ -516,4 +516,15 @@ std::vector<unsigned> MixGraph::calculateHubs()
     }
 
     return hubs;
+}
+
+int MixGraph::countOne()
+{
+	int counter = 0;
+	for(auto& node:net)
+	{
+		if(node.size() == 1)
+			counter++;
+	}
+	return counter;
 }

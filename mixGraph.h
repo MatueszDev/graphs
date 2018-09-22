@@ -32,7 +32,7 @@ private:
     void generateUsingFlowerMethodV2(size_t&, std::list<unsigned>::iterator&);
     unsigned startWalking(unsigned, unsigned);
     bool checkInitialCondition(unsigned, unsigned);
-    std::vector<unsigned> calculateHubs();
+    std::vector<unsigned> calculateHubs() const;
     unsigned randomWalk(unsigned, unsigned) const;
 
 public:
@@ -48,6 +48,7 @@ public:
 	void exportNetworkToFile() const;
 	void exportRandomWalkResultToDataFile(std::vector<std::vector<double>>&) const;
     int countOne();
+    void printHubsIndexes();
 };
 
 #endif

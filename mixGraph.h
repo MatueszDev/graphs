@@ -33,7 +33,8 @@ private:
     unsigned startWalking(unsigned, unsigned);
     bool checkInitialCondition(unsigned, unsigned);
     std::vector<unsigned> calculateHubs() const;
-    unsigned randomWalk(unsigned, unsigned) const;
+    unsigned randomWalk(const unsigned&, const unsigned&,
+                        std::vector<std::vector<unsigned>>&, const unsigned&);
 
 public:
     MixGraph(unsigned short, unsigned short, double);
@@ -43,12 +44,17 @@ public:
     void nextGenerationV2();
     std::vector<unsigned> startRandomWalk(unsigned, unsigned, unsigned);
     void generateRandomWalkCasesFile(std::vector<unsigned>, unsigned, unsigned);
-    void createHistogramFile() const;
-    std::vector<std::vector<double>> calculateTimeFromEachNodToHub(int);
+    void createHistogramFile(std::string) const;
+    std::vector<std::vector<double>> calculateTimeFromEachNodToHub(int,
+                                                                   std::vector<std::vector<unsigned>>&);
 	void exportNetworkToFile() const;
-	void exportRandomWalkResultToDataFile(std::vector<std::vector<double>>&) const;
+	void exportRandomWalkResultToDataFile(std::vector<std::vector<double>>&,
+                                          std::string =
+                                                        "D:\\agh\\semestr6\\pracaInz\\program\\randomWalkDat\\") const;
     int countOne();
     void printHubsIndexes();
+    void generateTrafficFile(std::vector<std::vector<unsigned>>&,
+                             std::string path);
 };
 
 #endif

@@ -355,7 +355,7 @@ void MixGraph::generateUsingFlowerMethodV2(size_t& row, std::list<unsigned>::ite
     }
 }
 
-void MixGraph::createHistogramFile() const
+void MixGraph::createHistogramFile(std::string path) const
 {
     unsigned maxDegree = net[0].size();
     for(auto& row:net)
@@ -376,7 +376,7 @@ void MixGraph::createHistogramFile() const
     }
 
     std::stringstream ss ;
-    ss << "D:\\agh\\semestr6\\pracaInz\\program\\datFiles\\graphLT" <<  u << v << "g"<<generation << ".dat";
+    ss << path << "graphLT" <<  u << v << "g"<<generation << ".dat";
     std::string fileName = ss.str();
 
     std::ofstream file;
@@ -397,13 +397,15 @@ void MixGraph::createHistogramFile() const
     delete [] counterTable;
 }
 
-std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int numberOfRepetition)
+std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int numberOfRepetition, std::vector<std::vector<unsigned>>& traffic)
 {
-    std::vector<unsigned> hubs = calculateHubs();
-    std::vector<std::vector<double>> results (hubs.size());
-
-    size_t hubsSize = hubs.size();
+	std::vector<unsigned> hubs = calculateHubs();
+	size_t hubsSize = hubs.size();
     size_t netSize = net.size();
+
+    std::vector<std::vector<double>> results (hubsSize);
+	traffic.resize(hubsSize);
+
 
     for(size_t i = 0; i < hubsSize; i++)
 		results[i].resize(netSize, 0);
@@ -413,7 +415,7 @@ std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int num
 		std::cout << "Repetition number: "<< repetition + 1 << ".\n";
 		for(size_t j = 0; j < hubsSize; ++j)
 			for(size_t i = 0; i < netSize; ++i)
-				results[j][i] += randomWalk(i,hubs[j]);
+				results[j][i] += randomWalk(i,hubs[j], traffic, j);
 	}
 
 	for (size_t j = 0; j < hubsSize; ++j)
@@ -451,7 +453,7 @@ void MixGraph::exportNetworkToFile() const
 	file.close();
 }
 
-unsigned MixGraph::randomWalk(unsigned startNode, unsigned endNode) const
+unsigned MixGraph::randomWalk(const unsigned& startNode, const unsigned& endNode, std::vector<std::vector<unsigned>>& traffic,const unsigned& hub)
 {
     unsigned time = 0;
     unsigned currentNode = startNode;
@@ -461,11 +463,12 @@ unsigned MixGraph::randomWalk(unsigned startNode, unsigned endNode) const
         ++time;
         std::list<unsigned>::iterator nextNode = Random::get(net[currentNode].begin(), net[currentNode].end());
         currentNode = *nextNode;
+		traffic[hub][currentNode] += 1;
     }
     return time;
 }
 
-void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>> &data) const
+void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>> &data, std::string path) const
 {
 	int* nodeDegree = new int[net.size()];
 	for (size_t i = 0; i < net.size(); ++i)
@@ -476,9 +479,9 @@ void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		std::ostringstream str;
-		str << uniqueNetworkId << "p" << (probability)<<  "_" << i;
+		str << uniqueNetworkId << "p" << (probability)<<  "_" << i << "_u" << u << "_v" << v;
 		std::string fileName = str.str();
-		std::string filePath = "D:\\agh\\semestr6\\pracaInz\\program\\randomWalkDat\\" + fileName + ".dat";
+		std::string filePath = path + fileName + ".dat";
 
 		std::ofstream file(filePath);
 		if (!file.is_open())
@@ -539,4 +542,32 @@ void MixGraph::printHubsIndexes()
 		std::cout << i << " ";
 	}
 	std::cout << "\n";
+}
+
+void MixGraph::generateTrafficFile(std::vector<std::vector<unsigned>>& traffic,
+	 							   std::string path)
+{
+	size_t trafficSize = traffic.size();
+	for(size_t hub = 0; hub < trafficSize; ++hub)
+	{
+		traffic[hub].resize(trafficSize);
+	}
+	for(size_t hub = 0; hub < trafficSize; ++hub )
+	{
+		std::ostringstream str;
+		str << "traffic_" << uniqueNetworkId << "p" << probability << "_" << hub << "_u" << u << "_v" << v;
+		std::string fileName = str.str();
+		std::string filePath = path + fileName;
+		std::ofstream file(filePath);
+		if (!file.is_open())
+		{
+			std::cerr << "Can not open the file: " << filePath << "\n";
+			return;
+		}
+		for(size_t nod = 0; nod < trafficSize; ++nod)
+		{
+			file << nod << " " << traffic[hub][nod] <<"\n";
+		}
+		file.close();
+	}
 }

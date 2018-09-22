@@ -472,11 +472,12 @@ void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>
 	{
 		nodeDegree[i] = net[i].size();
 	}
-
+	std::vector<unsigned> index = calculateHubs();
 	for (size_t i = 0; i < data.size(); i++)
 	{
-		std::string fileName = "";
-		generateRandomString(fileName, 6);
+		std::ostringstream str;
+		str << uniqueNetworkId << "p" << (probability)<<  "_" << i;
+		std::string fileName = str.str();
 		std::string filePath = "D:\\agh\\semestr6\\pracaInz\\program\\randomWalkDat\\" + fileName + ".dat";
 
 		std::ofstream file(filePath);
@@ -490,13 +491,14 @@ void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>
 		file << uniqueNetworkId << "\n";
 		file << probability << "\n";
 		file << "Hub number " << i << "\n";
+		file << "Hub index" << index[i] << "\n";
 		for (size_t j = 0; j < net.size(); ++j)
 			file << nodeDegree[j] << " " << data[i][j] << "\n";
 		file.close();
 	}
 }
 
-std::vector<unsigned> MixGraph::calculateHubs()
+std::vector<unsigned> MixGraph::calculateHubs() const
 {
     unsigned maxDegree = net[0].size();
     std::vector<unsigned> hubs = {0} ;
@@ -527,4 +529,14 @@ int MixGraph::countOne()
 			counter++;
 	}
 	return counter;
+}
+
+void MixGraph::printHubsIndexes()
+{
+	std::vector<unsigned> hubs = calculateHubs();
+	for(auto i:hubs)
+	{
+		std::cout << i << " ";
+	}
+	std::cout << "\n";
 }

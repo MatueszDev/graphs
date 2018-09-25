@@ -425,10 +425,10 @@ std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int num
     return results;
 }
 
-void MixGraph::exportNetworkToFile() const
+void MixGraph::exportNetworkToFile(std::string path) const
 {
 	std::stringstream ss;
-	ss << "net" << u << v << "g" << generation << uniqueNetworkId << ".dat";
+	ss << path << "net" << u << v << "g" << generation << uniqueNetworkId << ".dat";
 	std::string fileName = ss.str();
 
 	std::ofstream file;
@@ -570,4 +570,29 @@ void MixGraph::generateTrafficFile(std::vector<std::vector<unsigned>>& traffic,
 		}
 		file.close();
 	}
+}
+
+void MixGraph::generateFileToGraphVis(std::string path)
+{
+	unsigned hubs = calculateHubs().size();
+	std::stringstream ss;
+	ss << "net" << u << v << "g" << generation << uniqueNetworkId << "_" << hubs << ".dat";
+	std::string fileName = ss.str();
+
+	std::ofstream file;
+	file.open(fileName);
+	if (!file.is_open())
+	{
+		std::cerr << "Can not open file: " << fileName << std::endl;
+	}
+
+	for (size_t t = 0; t < net.size(); t++)
+	{
+		for (auto neighbour : net[t])
+		{
+			file << t << " " << neighbour << "\n";
+		}
+	}
+
+	file.close();
 }

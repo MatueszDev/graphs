@@ -47,7 +47,7 @@ public:
     void createHistogramFile(std::string) const;
     std::vector<std::vector<double>> calculateTimeFromEachNodToHub(int,
                                                                    std::vector<std::vector<unsigned>>&);
-	void exportNetworkToFile() const;
+	void exportNetworkToFile(std::string ="") const;
 	void exportRandomWalkResultToDataFile(std::vector<std::vector<double>>&,
                                           std::string =
                                                         "D:\\agh\\semestr6\\pracaInz\\program\\randomWalkDat\\") const;
@@ -55,6 +55,7 @@ public:
     void printHubsIndexes();
     void generateTrafficFile(std::vector<std::vector<unsigned>>&,
                              std::string path);
+    void generateFileToGraphVis(std::string path);
 };
 
 #endif

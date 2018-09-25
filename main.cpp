@@ -1,5 +1,7 @@
-#include "mixGraph.h"
+#include "src\mixGraph.h"
 #include <typeinfo>
+
+std::string path = "D:\\agh\\semestr6\\pracaInz\\13p03\\";
 
 int main(int argc,char* argv[])
 {
@@ -14,12 +16,13 @@ int main(int argc,char* argv[])
     try{
         if(static_cast<std::string>(argv[1]) == "i")
         {
-            MixGraph mtUV(2, 2, 0.3);
+            MixGraph mtUV(1, 3, 0.3);
             for(size_t t = 0; t < 5; t++)
             {
                 mtUV.nextGenerationV2();
-                mtUV.exportNetworkToFile();
+                mtUV.generateFileToGraphVis(path);
             }
+            mtUV.exportNetworkToFile(path);
         }
         else if(static_cast<std::string>(argv[2]) == "p")
         {
@@ -35,17 +38,19 @@ int main(int argc,char* argv[])
             MixGraph mtUV(u, v, probability);
             for(int i=0; i < 5; i++)
                 mtUV.nextGenerationV2();
-            std::vector<std::vector<double>> data = mtUV.calculateTimeFromEachNodToHub(repetition);
-            mtUV.exportRandomWalkResultToDataFile(data);
-            mtUV.exportNetworkToFile();
+            std::vector<std::vector<unsigned>> traffic;
+            std::vector<std::vector<double>> data = mtUV.calculateTimeFromEachNodToHub(repetition, traffic);
+            mtUV.exportRandomWalkResultToDataFile(data, path);
+            mtUV.exportNetworkToFile(path);
             std::cout << "Successfully ended program.\n";
         }
     }catch(...){
         file = argv[1];
         repetition = std::stoi(argv[2]);
         MixGraph mtUV(file);
-        std::vector<std::vector<double>> data = mtUV.calculateTimeFromEachNodToHub(repetition);
-        mtUV.exportRandomWalkResultToDataFile(data);
+        std::vector<std::vector<unsigned>> traffic;
+        std::vector<std::vector<double>> data = mtUV.calculateTimeFromEachNodToHub(repetition, traffic);
+        mtUV.exportRandomWalkResultToDataFile(data, path);
         std::cout << file;
     }
 

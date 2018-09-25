@@ -576,7 +576,7 @@ void MixGraph::generateFileToGraphVis(std::string path)
 {
 	unsigned hubs = calculateHubs().size();
 	std::stringstream ss;
-	ss << "net" << u << v << "g" << generation << uniqueNetworkId << "_" << hubs << ".dat";
+	ss << path << "net" << u << v << "g" << generation << uniqueNetworkId << "_" << hubs << ".dat";
 	std::string fileName = ss.str();
 
 	std::ofstream file;

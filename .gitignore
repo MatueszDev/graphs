@@ -7,3 +7,12 @@ GraphVisualizer.jar
 *.dat
 randomWalkDat/*
 src/Legacy
+tex_t/
+tex/
+summary/
+test.cpp
+test.py
+legacy/
+randomWalkDat_t/
+src/mixGraph.h.gch
+

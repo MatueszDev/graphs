@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 
-plt.clf()
 files = ["datFiles\graphLT22g5.dat"]
 
 for file in files:
@@ -9,7 +8,7 @@ for file in files:
         amount = []
         generation = int(data.readline())
         degrees = [2**i for i in range(1,generation+1,1)] #create k = 2**m where m = 1,2..,n
-        
+
         for point in data.readlines():
             edge = point.split()
             degree.append(int(edge[0]))
@@ -27,8 +26,7 @@ for file in files:
         plt.xlabel("Number of neighbours")
         plt.ylabel("occurance")
         #plt.bar(degree, amount)
-     
+
         #plt.loglog(degree, amount,'.r')
         plt.plot(degree,amount,'.r')
-        plt.savefig("wyniki/{}.pdf".format(file[8:-4]))
-        plt.clf()
+        plt.show()

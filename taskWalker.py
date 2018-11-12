@@ -3,15 +3,17 @@ import numpy as np
 from decimal import Decimal
 from time import time
 
-path = "D:\\agh\\semestr6\\pracaInz\\program\\graph.exe"
-u,v = 2,2
-probability = 0
+
+probability = 1
+path = "D:\\agh\\semestr6\\pracaInz\\program\\main.exe"
+path_to_file="D:\\agh\\semestr6\\pracaInz\\program\\randomWalkDat_t\\g5_u1_v2\\p10\\"
+u,v = 1,2
 repetition = 50
-arguments = [u, v, probability, repetition]
+generation = 5
+arguments = [u, v, probability, repetition, generation, path_to_file]
 times = []
-for i in np.arange(0.4, 0.9, 0.1):
-    arguments[2]= i
-    args = "{} {} {:.1f} {}".format(*arguments)
+for i in np.arange(0, 0.6, 0.1):
+    args = "-u {} -v {} -p {} -rep {} -g {} -path {} -n".format(*arguments)
     print(path,args)
     command = "{} {}".format(path, args)
     start = time()
@@ -20,6 +22,3 @@ for i in np.arange(0.4, 0.9, 0.1):
     times.append(end - start)
 
 print(times)
-with open("time.dat" ,'w') as file:
-    for time in times:
-        file.write("{}\n".format(time))

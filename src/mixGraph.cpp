@@ -274,6 +274,13 @@ void MixGraph::generateRandomWalkCasesFile(std::vector<unsigned> data, unsigned 
 void MixGraph::nextGenerationV2()
 {
     generation++;
+	size_t tt = 1;
+	auto nei = net[1].begin();
+	if(generation == 1)
+	{
+		generateUsingTreeMethodV2(tt, nei);
+		return;
+	}
     size_t rows = net.size();
     for(size_t i = 0; i < rows; ++i)
     {
@@ -397,7 +404,7 @@ void MixGraph::createHistogramFile(std::string path) const
     delete [] counterTable;
 }
 
-std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int numberOfRepetition, std::vector<std::vector<unsigned>>& traffic)
+std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int numberOfRepetition, std::vector<std::vector<unsigned>>& traffic, std::vector<std::vector<double>>& sigma)
 {
 	std::vector<unsigned> hubs = calculateHubs();
 	size_t hubsSize = hubs.size();
@@ -405,23 +412,41 @@ std::vector<std::vector<double>> MixGraph::calculateTimeFromEachNodToHub(int num
 
     std::vector<std::vector<double>> results (hubsSize);
 	traffic.resize(hubsSize);
-
+	sigma.resize(hubsSize);
+	std::vector<unsigned> res;
 
     for(size_t i = 0; i < hubsSize; i++)
-		results[i].resize(netSize, 0);
-
-	for(int repetition = 0; repetition < numberOfRepetition; ++repetition)
 	{
-		std::cout << "Repetition number: "<< repetition + 1 << ".\n";
-		for(size_t j = 0; j < hubsSize; ++j)
-			for(size_t i = 0; i < netSize; ++i)
-				results[j][i] += randomWalk(i,hubs[j], traffic, j);
+		results[i].resize(netSize, 0);
+		traffic[i].resize(netSize,0);
+		sigma[i].resize(netSize,0);
 	}
 
-	for (size_t j = 0; j < hubsSize; ++j)
-		for (size_t i = 0; i < netSize; ++i)
-			results[j][i] /= numberOfRepetition;
-
+		//std::cout << "Repetition number: "<< repetition + 1 << ".\n";
+	for(size_t j = 0; j < hubsSize; ++j)
+	{
+		std::cout << "Hub " << j + 1 << std::endl;
+		for(size_t i = 0; i < netSize; ++i)
+		{
+            //std::cout << "node " << i << "\n"; 
+			for(int repetition = 0; repetition < numberOfRepetition; ++repetition)
+			{ 
+				int temp = randomWalk(i,hubs[j], traffic, j);
+				res.push_back(temp);
+				results[j][i] += temp;
+			}
+			double average = results[j][i]/numberOfRepetition;
+			results[j][i] = average;
+			double sum = 0;
+			for(auto el:res)
+			{
+				sum += (el - average)*(el - average);
+			}
+			sum /= numberOfRepetition;
+			sigma[j][i] = std::sqrt(sum)/results[j][i];
+			res.clear();
+		}
+	}
     return results;
 }
 
@@ -457,16 +482,72 @@ unsigned MixGraph::randomWalk(const unsigned& startNode, const unsigned& endNode
 {
     unsigned time = 0;
     unsigned currentNode = startNode;
-
     while(currentNode != endNode)
     {
         ++time;
-        std::list<unsigned>::iterator nextNode = Random::get(net[currentNode].begin(), net[currentNode].end());
+        std::list<unsigned>::iterator nextNode = _findNextNeighbour(currentNode);
+        //std::list<unsigned>::iterator nextNode = Random::get(net[currentNode].begin(), net[currentNode].end());
         currentNode = *nextNode;
 		traffic[hub][currentNode] += 1;
     }
     return time;
 }
+
+std::list<unsigned>::iterator MixGraph::_findNextNeighbour(const unsigned& node)  
+{
+    std::vector<double> numberOfNeighbours(net[node].size(),0);
+    size_t i = 0;
+    double sum = 0;
+    for(auto& neighbour:net[node])
+    {
+        unsigned size = net[neighbour].size();
+        numberOfNeighbours[i] = size;
+        sum += size;
+        ++i;
+    }
+    
+    double randomValue = double(Random::get())/Random::max();
+    for(auto& num:numberOfNeighbours)
+    {
+        num /= sum;
+    }
+    double threshold = 0;
+    i = -1;
+    while(threshold < randomValue)
+    {
+        threshold += numberOfNeighbours[i];
+        ++i;
+    }
+    //===========================================================================================
+    // std::cout << "Current Node: " << node <<"\n";
+    // std::cout << "Number of node and num of n:\n";
+    // for(auto& neighbour:net[node])
+    // {
+    //     std::cout << std::setw(4) <<neighbour << " ";
+    // }
+    // std::cout << "\n";
+    // for(auto el:numberOfNeighbours)
+    //     std::cout << std::setw(4)<< el << " ";
+    // std::cout << "\n";
+    // 
+    // std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+    // std::cout << "Random val: " << randomValue << "\n";
+    // for(auto& num:numberOfNeighbours)
+    // {
+    //     std::cout << std::setw(5)<< std::setprecision(4) << num << " ";
+    // }
+    // std::cout << "Res:\n";
+    
+    
+    
+    std::list<unsigned>::iterator result = net[node].begin();
+    for(size_t count = 0; count < i && result != net[node].end(); ++count, ++result)
+    {
+        //std::cout << *result << " "
+    }
+    //std::cout << "Next node: " << *(--result) << "\n\n";
+    return --result;
+} 
 
 void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>> &data, std::string path) const
 {
@@ -494,7 +575,7 @@ void MixGraph::exportRandomWalkResultToDataFile(std::vector <std::vector<double>
 		file << uniqueNetworkId << "\n";
 		file << probability << "\n";
 		file << "Hub number " << i << "\n";
-		file << "Hub index" << index[i] << "\n";
+		file << "Hub index " << index[i] << "\n";
 		for (size_t j = 0; j < net.size(); ++j)
 			file << nodeDegree[j] << " " << data[i][j] << "\n";
 		file.close();
@@ -505,9 +586,8 @@ std::vector<unsigned> MixGraph::calculateHubs() const
 {
     unsigned maxDegree = net[0].size();
     std::vector<unsigned> hubs = {0} ;
-    size_t netSize = net.size();
 
-    for(size_t node = 1; node < netSize; ++node)
+    for(size_t node = 1; node < net.size(); ++node)
     {
         unsigned currentDegree = net[node].size();
         if(currentDegree == maxDegree)
@@ -544,33 +624,6 @@ void MixGraph::printHubsIndexes()
 	std::cout << "\n";
 }
 
-void MixGraph::generateTrafficFile(std::vector<std::vector<unsigned>>& traffic,
-	 							   std::string path)
-{
-	size_t trafficSize = traffic.size();
-	for(size_t hub = 0; hub < trafficSize; ++hub)
-	{
-		traffic[hub].resize(trafficSize);
-	}
-	for(size_t hub = 0; hub < trafficSize; ++hub )
-	{
-		std::ostringstream str;
-		str << "traffic_" << uniqueNetworkId << "p" << probability << "_" << hub << "_u" << u << "_v" << v;
-		std::string fileName = str.str();
-		std::string filePath = path + fileName;
-		std::ofstream file(filePath);
-		if (!file.is_open())
-		{
-			std::cerr << "Can not open the file: " << filePath << "\n";
-			return;
-		}
-		for(size_t nod = 0; nod < trafficSize; ++nod)
-		{
-			file << nod << " " << traffic[hub][nod] <<"\n";
-		}
-		file.close();
-	}
-}
 
 void MixGraph::generateFileToGraphVis(std::string path)
 {
